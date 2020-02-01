@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>修改密码</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='lib/layui/css/layui.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/public.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/xadmin.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/layui/layui.js') }} " charset="utf-8"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/xadmin.js') }}"></script>
+</head>
+<body class="childrenBody">
+<form class="layui-form layui-row changePwd">
+    <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+        <div class="layui-form-item">
+            <label class="layui-form-label">旧密码</label>
+            <div class="layui-input-block">
+                <input type="password" value="" placeholder="请输入旧密码" lay-verify="required|oldPwd" name="oldPwd"
+                       class="layui-input pwd">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" value="" placeholder="请输入新密码" lay-verify="required|newPwd" name="newPwd"
+                       class="layui-input pwd">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" value="" placeholder="请确认密码" lay-verify="required|confirmPwd" name="confirmPwd"
+                       class="layui-input pwd">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="changePwd">立即修改</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+
+<script>
+    $(function () {
+        layui.use('form', function () {
+            var form = layui.form;
+            //监听提交
+
+            //添加验证规则
+            form.verify({
+                newPwd: function (value, item) {
+                    if (value.length < 6) {
+                        return "密码长度不能小于6位";
+                    }
+                },
+
+            });
+            form.on('submit(changePwd)', function (data) {
+                //CSRF的固定写法
+                var csrf_token = "{{ csrf_token() }}";
+
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                        }
+                    }
+                });
+
+
+                var _data = {
+                    "old_passwd": data.field.oldPwd,
+                    'new_password': data.field.newPwd,
+                    'new_confirm': data.field.confirmPwd
+                };
+
+                console.log(_data);
+
+                $.ajax({
+                    type: 'POST',
+                    data: _data,
+                    url: "{{ url_for('admin.change_passwd') }}",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status == 200) {
+
+                            layer.msg(data.msg, {
+                                icon: 1,
+                                time: 1000,
+                            }, function () {
+                                xadmin.close();
+
+                                // 可以对父窗口进行刷新
+                                xadmin.father_reload();
+                            });
+
+
+                        } else {
+
+                            layer.msg(data.msg, {
+                                icon: 2,
+                                time: 1000,
+                            }, function () {
+                                window.location.reload();
+                            });
+
+
+                        }
+                    }
+                });
+
+
+                return false;
+            });
+        });
+    })
+</script>
+</html>

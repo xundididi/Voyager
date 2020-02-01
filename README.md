@@ -106,7 +106,7 @@ bash run.sh
 ### 功能更新
 
 - [ ] POC框架中引入bugscan和beebeeto，以改善针对WEB应用扫描不全的问题，这样四个主流POC框架的POC数量总计有1500+
-- [ ] 引入AWVS12，首先对类http标签惊醒WAF测试,没有WAF保护的WEB应用将用AWVS的爬虫和xray进行检测
+- [ ] 引入AWVS12，首先对类http标签进行WAF测试,没有WAF保护的WEB应用将用AWVS的爬虫和xray进行检测
 - [ ] 引入被动扫描器XRAY，和之前AWVS的一样，没有WAF保护的WEB应用将用AWVS的爬虫和xray进行检测
 - [ ] 引入IP代理功能，为部分模块添加代理参数
 - [ ] 引入Metasploit, 可以调用metasploit接口

@@ -29,6 +29,3 @@ docker run --rm --network="host" ap0llo/poc:xunfeng init
 
 # 初始化kunpeng镜像
 docker run --rm --network="host" ap0llo/poc:kunpeng init
-
-# 添加新用户
-curl http://127.0.0.1:5000/add

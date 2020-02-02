@@ -83,7 +83,17 @@ git clone https://github.com/ody5sey/Voyager.git
 cd Voyager
 bash run.sh
 ```
-然后访问http://127.0.0.1:5000
+
+
+### 0x003 运行
+
+```bash
+python manager.py
+```
+
+添加新用户
+curl http://127.0.0.1:5000/add
+然后访问 http://127.0.0.1:5000/
 
 默认的用户名和密码是luffy:s1riu5
 
